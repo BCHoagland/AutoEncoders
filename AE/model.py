@@ -22,8 +22,7 @@ class Autoencoder(nn.Module):
             nn.ELU(),
             nn.Linear(64, 128),
             nn.ELU(),
-            nn.Linear(128, 28 * 28),
-            nn.Tanh()
+            nn.Linear(128, 28 * 28)
         )
 
     def forward(self, s):
