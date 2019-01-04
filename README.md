@@ -5,4 +5,4 @@ Simple implementations of different basic autoencoder schemes
 ## Types
 - [ ] Basic Autoencoder (AE)
 - [ ] Variational Autoencoder (VAE)
-- [ ] Disentangled Variational Autoencoders (DVAE)
+- [ ] Disentangled Variational Autoencoder (DVAE)
