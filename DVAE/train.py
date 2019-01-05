@@ -13,6 +13,7 @@ from visualize import *
 num_epochs = 100
 batch_size = 128
 lr = 1e-3
+beta = 4
 
 def KL(mu, log_var):
     kl = -0.5 * torch.sum(1 + log_var - mu.pow(2) - log_var.exp())
@@ -23,34 +24,35 @@ def KL(mu, log_var):
 dataset = MNIST('../data', transform=transforms.ToTensor(), download=True)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-# create autoencoder and optimizer for it
-vae = VAE()
-optimizer = optim.Adam(vae.parameters(), lr=lr)
+# create ß-vae and its optimizer
+beta_vae = VAE()
+beta_vae_optimizer = optim.Adam(beta_vae.parameters(), lr=lr)
 
 # start training
 for epoch in range(num_epochs):
 
     # minibatch optimization with Adam
     for data in dataloader:
-        img, _ = data
+        img, labels = data
 
         # change the images to be 1D
         img = img.view(img.size(0), -1)
 
-        # get output from network
-        out, mu, log_var = vae(img)
+        # run images through ß-VAE
+        out, mu, log_var = beta_vae(img)
 
-        # calculate loss and update network
-        loss = F.binary_cross_entropy(out, img) + KL(mu, log_var)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        # run one optimization step on the loss function
+        # the 'beta' term is the only difference between the VAE and ß-VAE loss functions
+        beta_vae_loss = F.binary_cross_entropy(out, img) + (beta * KL(mu, log_var))
+        beta_vae_optimizer.zero_grad()
+        beta_vae_loss.backward()
+        beta_vae_optimizer.step()
 
     # save images periodically
     if epoch % 10 == 0:
-        img = out.data * 0.5 + 0.5
-        img = img.view(out.size(0), 1, 28, 28)
-        save_image(img, './img/' + str(epoch) + '_epochs.png')
+        pic = out.data * 0.5 + 0.5
+        pic = pic.view(out.size(0), 1, 28, 28)
+        save_image(pic, './img/' + str(epoch) + '_epochs.png')
 
     # plot loss
-    update_viz(epoch, loss.item())
+    update_viz(epoch, beta_vae_loss.item())
