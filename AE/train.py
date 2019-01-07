@@ -42,7 +42,6 @@ for epoch in range(num_epochs):
 
     # save images periodically
     if epoch % 10 == 0:
-        img = out.data * 0.5 + 0.5
         img = img.view(out.size(0), 1, 28, 28)
         save_image(img, './img/' + str(epoch) + '_epochs.png')
 

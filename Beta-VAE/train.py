@@ -50,8 +50,7 @@ for epoch in range(num_epochs):
 
     # save images periodically
     if epoch % 10 == 0:
-        pic = out.data * 0.5 + 0.5
-        pic = pic.view(out.size(0), 1, 28, 28)
+        pic = out.data.view(out.size(0), 1, 28, 28)
         save_image(pic, './img/' + str(epoch) + '_epochs.png')
 
     # plot loss

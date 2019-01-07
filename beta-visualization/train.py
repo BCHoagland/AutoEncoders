@@ -62,12 +62,10 @@ for epoch in range(num_epochs):
 
     # save images periodically
     if epoch % 10 == 0:
-        pic = out1.data * 0.5 + 0.5
-        pic = pic.view(out1.size(0), 1, 28, 28)
+        pic = out1.data.view(out1.size(0), 1, 28, 28)
         save_image(pic, './img/vae_' + str(epoch) + '_epochs.png')
 
-        pic = out2.data * 0.5 + 0.5
-        pic = pic.view(out2.size(0), 1, 28, 28)
+        pic = out2.data.view(out2.size(0), 1, 28, 28)
         save_image(pic, './img/ß_vae_' + str(epoch) + '_epochs.png')
 
     with torch.no_grad():
