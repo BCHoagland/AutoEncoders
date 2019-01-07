@@ -25,11 +25,11 @@ class Autoencoder(nn.Module):
             nn.Linear(128, 28 * 28)
         )
 
-    def forward(self, s):
-        return self.decoder(self.encoder(s))
+    def forward(self, x):
+        return self.decoder(self.encoder(x))
 
-    def encode(self, s):
-        return self.encoder(s)
+    def encode(self, x):
+        return self.encoder(x)
 
-    def decode(self, s):
-        return self.decoder(s)
+    def decode(self, x):
+        return self.decoder(x)

@@ -29,14 +29,14 @@ class VAE(nn.Module):
             nn.Sigmoid()
         )
 
-    def forward(self, s):
-        s = self.encoder(s)
+    def forward(self, x):
+        x = self.encoder(x)
 
-        mu = self.mu(s)
-        log_var = self.log_var(s)
+        mu = self.mu(x)
+        log_var = self.log_var(x)
 
         z = mu + torch.mul(torch.exp(log_var / 2), torch.randn_like(log_var))
 
-        s_hat = self.decoder(z)
+        x_hat = self.decoder(z)
 
-        return s_hat, mu, log_var
+        return x_hat, mu, log_var
