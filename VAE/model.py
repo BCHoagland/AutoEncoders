@@ -35,6 +35,7 @@ class VAE(nn.Module):
         mu = self.mu(x)
         log_var = self.log_var(x)
 
+        # z = mu + (std_dev * eps), where eps ~ N(0,1)
         z = mu + torch.mul(torch.exp(log_var / 2), torch.randn_like(log_var))
 
         x_hat = self.decoder(z)
