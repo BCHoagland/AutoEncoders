@@ -1,14 +1,6 @@
 import torch
 import torch.nn as nn
 
-
-
-
-
-
-# ADD NOISE
-
-
 class DAE(nn.Module):
     def __init__(self):
         super(DAE, self).__init__()
@@ -31,4 +23,7 @@ class DAE(nn.Module):
         )
 
     def forward(self, x):
+        # add random noise to input
+        # this is the only difference between normal autoencoders and denoising autoencoders
+        x = x + torch.randn_like(x)
         return self.decoder(self.encoder(x))

@@ -18,7 +18,7 @@ lr = 1e-3
 dataset = MNIST('../data', transform=transforms.ToTensor(), download=True)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-# create autoencoder and optimizer for it
+# create denoising autoencoder and optimizer for it
 dae = DAE()
 optimizer = optim.Adam(dae.parameters(), lr=lr)
 
