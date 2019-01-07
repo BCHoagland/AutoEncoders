@@ -41,3 +41,14 @@ class VAE(nn.Module):
         x_hat = self.decoder(z)
 
         return x_hat, mu, log_var
+
+    def encode(self, x):
+        x = self.encoder(x)
+
+        mu = self.mu(x)
+        log_var = self.log_var(x)
+        z = mu + torch.mul(torch.exp(log_var / 2), torch.randn_like(log_var))
+        return z
+
+    def decode(self, z):
+        return self.decoder(z)

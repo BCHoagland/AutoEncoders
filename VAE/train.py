@@ -10,7 +10,7 @@ from model import VAE
 from visualize import *
 
 # hyperparameters
-num_epochs = 100
+num_epochs = 20
 batch_size = 128
 lr = 1e-3
 
@@ -53,3 +53,9 @@ for epoch in range(num_epochs):
 
     # plot loss
     update_viz(epoch, loss.item())
+
+# generate new random images
+input = torch.randn(96, 10)
+out = vae.decode(input)
+img = out.data.view(96, 1, 28, 28)
+save_image(img, './generated_img/img.png')
