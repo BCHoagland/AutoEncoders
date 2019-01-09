@@ -47,7 +47,7 @@ for epoch in range(num_epochs):
 
         # normal VAE
         out1, mu1, log_var1 = vae(img)
-        vae_loss = F.binary_cross_entropy(out1, img.view(-1, 28 * 28)) + KL(mu1, log_var1)
+        vae_loss = F.binary_cross_entropy(out1, img) + KL(mu1, log_var1)
         vae_optimizer.zero_grad()
         vae_loss.backward()
         vae_optimizer.step()

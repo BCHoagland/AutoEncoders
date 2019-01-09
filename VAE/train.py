@@ -10,7 +10,7 @@ from model import VAE
 from visualize import *
 
 # hyperparameters
-num_epochs = 20
+num_epochs = 50
 batch_size = 128
 lr = 1e-3
 
