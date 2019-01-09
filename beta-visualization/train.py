@@ -5,12 +5,13 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision.datasets import MNIST
 from torchvision.utils import save_image
+from sklearn.manifold import TSNE
 
 from model import VAE
 from visualize import *
 
 # hyperparameters
-num_epochs = 100
+num_epochs = 30
 batch_size = 128
 lr = 1e-3
 beta = 4
@@ -23,8 +24,6 @@ def KL(mu, log_var):
 # get images from MNIST database
 dataset = MNIST('../data', transform=transforms.ToTensor(), download=True)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
-
-# visloader = DataLoader(dataset, batch_size=len(dataset))
 visloader = DataLoader(dataset, batch_size=1000)
 
 # create vae and its optimizer
@@ -36,6 +35,7 @@ beta_vae = VAE()
 beta_vae_optimizer = optim.Adam(beta_vae.parameters(), lr=lr)
 
 # start training
+print('Training...', end='', flush=True)
 for epoch in range(num_epochs):
 
     # minibatch optimization with Adam
@@ -60,6 +60,16 @@ for epoch in range(num_epochs):
         beta_vae_loss.backward()
         beta_vae_optimizer.step()
 
+    # plot loss after every epoch
+    update_viz(epoch, vae_loss.item(), beta_vae_loss.item())
+
+    # plot variances of each latent variable after every epoch
+    with torch.no_grad():
+        _, _, log_var1 = vae(img)
+        _, _, log_var2 = beta_vae(img)
+        log_vars = torch.t(torch.stack((torch.mean(log_var1, dim=0), torch.mean(log_var2, dim=0))))
+        bar(log_vars.numpy())
+
     # save images periodically
     if epoch % 10 == 0:
         pic = out1.data.view(out1.size(0), 1, 28, 28)
@@ -68,19 +78,19 @@ for epoch in range(num_epochs):
         pic = out2.data.view(out2.size(0), 1, 28, 28)
         save_image(pic, './img/ß_vae_' + str(epoch) + '_epochs.png')
 
-    with torch.no_grad():
-        for img, labels in visloader:
-            img = img.view(img.size(0), -1)
+print('DONE')
 
-            scatter(vae.encode(img).numpy()[:,:3], labels.numpy())
-            beta_scatter(beta_vae.encode(img).numpy()[:,:3], labels.numpy())
+print('Running t-SNE...', end='', flush=True)
+with torch.no_grad():
+    tsne = TSNE(n_components=2, random_state=0)
 
-            _, _, log_var1 = vae(img)
-            _, _, log_var2 = beta_vae(img)
-            log_vars = torch.t(torch.stack((torch.mean(log_var1, dim=0), torch.mean(log_var2, dim=0))))
-            bar(log_vars.numpy())
+    for img, labels in visloader:
+        img = img.view(img.size(0), -1)
 
-            break
+        raw_coords = tsne.fit_transform(img)
+        vae_coords = tsne.fit_transform(vae.encode(img).numpy())
+        beta_vae_coords = tsne.fit_transform(beta_vae.encode(img).numpy())
+        beta_scatter(raw_coords, vae_coords, beta_vae_coords, labels)
 
-    # plot loss
-    update_viz(epoch, vae_loss.item(), beta_vae_loss.item())
+        break
+print('DONE')

@@ -41,29 +41,38 @@ colors = np.array([[255, 0, 0],
                    [100, 0, 255],
                    [255, 0, 255]])
 
-def scatter(coords, labels):
+def beta_scatter(raw_coords, vae_coords, beta_vae_coords, labels):
+
     viz.scatter(
-        X=coords,
-        Y=labels + 1,
-        win='VAE latent space',
+        X=raw_coords,
+        Y=labels+1,
+        win='latent raw',
         opts=dict(
-            # legend=(labels - 1).tolist(),
-            title='Distribution of Latent Variables in VAE',
-            markercolor=colors,
-            markersize=4
+            title='Raw Observations',
+            markersize=4,
+            markercolor=colors
         )
     )
 
-def beta_scatter(coords, labels):
     viz.scatter(
-        X=coords,
-        Y=labels + 1,
-        win='ß-VAE latent space',
+        X=vae_coords,
+        Y=labels+1,
+        win='latent VAE',
         opts=dict(
-            # legend=(labels - 1).tolist(),
-            title='Distribution of Latent Variables in ß-VAE',
-            markercolor=colors,
-            markersize=4
+            title='Latent VAE Observations',
+            markersize=4,
+            markercolor=colors
+        )
+    )
+
+    viz.scatter(
+        X=beta_vae_coords,
+        Y=labels+1,
+        win='latent ß-VAE',
+        opts=dict(
+            title='Latent ß-VAE Observations',
+            markersize=4,
+            markercolor=colors
         )
     )
 
