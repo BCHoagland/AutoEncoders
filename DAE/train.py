@@ -31,8 +31,6 @@ for epoch in range(num_epochs):
 
         # change the images to be 1D
         img = img.view(img.size(0), -1)
-        print(img.shape)
-        quit()
 
         # get output from network
         out = dae(img)
