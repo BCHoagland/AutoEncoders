@@ -6,7 +6,7 @@ Simple implementations of different basic autoencoder schemes
 - [x] Basic Autoencoder (AE)
 - [x] Denoising Autoencoder (DAE)
 - [x] Variational Autoencoder (VAE)
-- [x] Disentangled Variational Autoencoder (Beta-VAE)
+- [x] Disentangled Variational Autoencoder (ß-VAE)
 
 ## Dependencies
 PyTorch, Numpy, Visdom
